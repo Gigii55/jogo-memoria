@@ -15,6 +15,7 @@ buscarPalavras();
 salvarPartida();
 guardarTema ();
 
+
 function guardarTema (){
 
 let tema = localStorage.getItem("tema");
@@ -69,12 +70,19 @@ async function salvarPartida(){
 
 function iniciar(){
 
+		tentativas = Number(localStorage.getItem("tentativas")) || 0;	
+		const elemento = document.getElementById("tentativas");
+		elemento.textContent = "tentativas: "+ tentativas;
+
+	console.log("iniciar rodou");
 	let embaralhadas = embaralhar([...palavras, ...palavras]);
 	cards.forEach((card, x)=>{
 		card.textContent = "?";
 		card.dataset.palavra = embaralhadas[x];
 		card.onclick = () => virar(card);
-	});
+	}
+		
+);
 }
 
 function virar(card){
@@ -83,11 +91,15 @@ function virar(card){
 	card.classList.add("selecionado");
 	if(!primeira){
 		primeira = card;
+		
 		return;
+		
 	}
 	segunda = card;
 	tentativas++;
 	verificar();
+	contarTentativas();
+	
 }
 
 function verificar(){
@@ -110,6 +122,12 @@ function verificar(){
 		console.log("2")
 	}
 }
+function contarTentativas (){
+
+		const elemento = document.getElementById("tentativas");
+		elemento.textContent = "tentativas: "+ tentativas;
+		localStorage.setItem("tentativas", tentativas);
+}
 
 function embaralhar(array){
 	for(let x=array.length - 1; x>0; x--){
@@ -121,4 +139,4 @@ function embaralhar(array){
 
 
 
-btnReiniciar.onclick =() => buscarPalavras();
+btnReiniciar.onclick =()=>{ localStorage.removeItem("tentativas"); buscarPalavras();} 
